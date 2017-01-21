@@ -19,8 +19,7 @@ function TDEE (data) {
 // Basal Metabolic Rate
 TDEE.prototype.calculateBMR = function () {
 	if (this.bodyFat != 0) {
-		var leanBodyMass = this.weight - (this.weight * (this.bodyFat / 100))
-		return Math.floor(370 + (21.6 * leanBodyMass))
+		return Math.floor(370 + (21.6 * this.calculateLeanBodyMass()))
 	}
 	var weightFactor = 9.99
 	var heightFactor = 6.25
@@ -28,6 +27,10 @@ TDEE.prototype.calculateBMR = function () {
 	var result = ((weightFactor * weight) + (heightFactor * this.height) - (ageFactor * this.age))
 
 	return Math.floor(this.sex == 'male' ? result + 5 : result - 161)
+}
+
+TDEE.prototype.calculateLeanBodyMass = function() {
+	return this.weight - (this.weight * (this.bodyFat / 100))
 }
 
 // calories used during physical activity
@@ -126,6 +129,7 @@ var qmmr = {
 }
 
 var tdee = new TDEE(qmmr)
+console.log('LeanBodyMass: ', tdee.calculateLeanBodyMass())
 console.log('BMR: ', tdee.calculateBMR())
 console.log('TEA: ', tdee.calculateTEA())
 console.log('NEAT: ', tdee.calculateNEAT())
